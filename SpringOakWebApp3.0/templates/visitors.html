@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="mb-3">
+        <a href="/dashboard" class="btn btn-primary me-2">Home</a>
+        <a href="/visitor-dashboard" class="btn btn-primary">Visitor Dashboard</a>
+        <a href="/visitors?type=checked_in" class="btn btn-primary me-2">Checked In Visitors</a>
+        <a href="/visitors?type=checked_out" class="btn btn-secondary">Checked Out Visitors</a>
+    </div>
+    <div class="container mt-5">
+        <h1 class="mb-4">Registered Visitors</h1>
+   
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Resident Name</th>
+                        <th>Date</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Check-In Time</th>
+                        <th>Check-Out Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for visitor in visitors %}
+                    <tr>
+                        <td>{{ visitor.name }}</td>
+                        <td>{{ visitor.resident_name }}</td>
+                        <td>
+                            {% if visitor.date %}
+                                {{ visitor.date }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+                        <td>{{ visitor.phone }}</td>
+                        <td>{{ visitor.email }}</td>
+                        <td>
+                            {% if visitor.checkin_time %}
+                                {{ visitor.checkin_time.strftime('%I:%M %p') }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if visitor.checkout_time %}
+                                {{ visitor.checkout_time.strftime('%I:%M %p') }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='bootstrap.bundle.min.js') }}"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
