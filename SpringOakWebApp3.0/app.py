@@ -156,6 +156,38 @@ def resident_login():
 
     return render_template('resident_login.html')
 
+@app.route('/visitor_check_status')
+def visitor_check_status():
+    # Retrieve the filter type from the query parameter
+    visitor_type = request.args.get('type', 'all')
+
+    # Filter the visitors based on the visitor_type
+    if visitor_type == 'checked_in':
+        visitors = Visitor.query.filter_by(checked_in=True).all()
+    elif visitor_type == 'checked_out':
+        visitors = Visitor.query.filter(Visitor.checked_in == False, Visitor.checkout_time.isnot(None)).all()
+    else:
+        visitors = Visitor.query.all()
+
+    # Adjust check-in and check-out times for display using timedelta
+    for visitor in visitors:
+        # Apply manual adjustment for check-in time using timedelta
+        if visitor.checkin_time:
+            adjusted_checkin_time = visitor.checkin_time - timedelta(hours=5)
+            visitor.local_checkin_time = adjusted_checkin_time.strftime('%I:%M %p')
+        else:
+            visitor.local_checkin_time = 'N/A'
+
+        # Apply manual adjustment for check-out time using timedelta
+        if visitor.checkout_time:
+            adjusted_checkout_time = visitor.checkout_time - timedelta(hours=5)
+            visitor.local_checkout_time = adjusted_checkout_time.strftime('%I:%M %p')
+        else:
+            visitor.local_checkout_time = 'N/A'
+
+    # Render the visitor_check_status.html template with the adjusted visitors data
+    return render_template('visitors_check_status.html', visitors=visitors, visitor_type=visitor_type)
+
 
 @app.route('/resident-homepage')
 def resident_homepage():
