@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resident Profile</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-header">
+                Resident Profile
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ resident.first_name }} {{ resident.last_name }}</h5>
+                <p class="card-text"><strong>ID:</strong> {{ resident.id }}</p>
+                <p class="card-text"><strong>Birthdate:</strong> {{ resident.birthdate.strftime('%B %d, %Y') }}</p>
+                <p class="card-text"><strong>Enter Date:</strong> {{ resident.enter_date.strftime('%B %d, %Y') }}</p>
+                <p class="card-text"><strong>Room Number:</strong> {{ resident.room_number }}</p>
+                <p class="card-text"><strong>Insurance:</strong> {{ resident.insurance }}</p>
+                <p class="card-text"><strong>Emergency Contact Full Name:</strong> {{ resident.emergency_contact_full_name }}</p>
+                <p class="card-text"><strong>Emergency Contact Phone:</strong> {{ resident.emergency_contact_phone_number }}</p>
+                <a href="{{ url_for('edit_resident', resident_id=resident.id) }}" class="btn btn-primary">Edit</a>
+                <form action="{{ url_for('delete_resident', resident_id=resident.id) }}" method="post" class="d-inline">
+                    <input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this resident?');">
+                </form>
+                <h5 class="mt-4">Visitors</h5>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Date</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Check-In Time</th>
+            <th>Check-Out Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for visitor in resident.visitors %}
+        <tr>
+            <td>{{ visitor.first_name }}</td>
+            <td>{{ visitor.last_name }}</td>
+            <td>{{ visitor.date.strftime('%m-%d-%Y') if visitor.date else 'N/A' }}</td>
+            <td>{{ visitor.phone }}</td>
+            <td>{{ visitor.email }}</td>
+            <td>{{ visitor.local_checkin_time }}</td>
+            <td>{{ visitor.local_checkout_time }}</td>
+
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="6">No visitors found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+            </div>
+            <div class="card-footer text-muted">
+                <a href="{{ url_for('resident_database') }}" class="card-link">Back to Resident Database</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+                   
