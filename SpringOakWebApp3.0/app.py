@@ -129,6 +129,42 @@ def visitor_dashboard():
 
     return render_template('visitor_dashboard.html')
 
+
+# Resident dashboard login
+@app.route('/resident-login', methods=['GET', 'POST'])
+def resident_login():
+    if request.method == 'POST':
+        username = request.form['username']
+        room_number = request.form['room_number']
+
+        # Check that the resident exists
+        cursor = db_connection()
+        resident_data = cursor.execute('SELECT * FROM Residents WHERE residentFirstName = ? AND roomNumber = ?',
+                                       (username, room_number)).fetchone()
+
+        if resident_data:
+            session['resident_loggedin'] = True
+            session['resident_id'] = resident_data['residentID']
+            session['resident_username'] = resident_data['residentFirstName']
+            # Redirect to the resident dashboard
+            return redirect(url_for('resident_homepage'))
+
+        else:
+            flash('Invalid resident credentials. Please try again.')
+
+    return render_template('resident_login.html')
+
+
+@app.route('/resident-homepage')
+def resident_homepage():
+    if 'resident_loggedin' in session and session['resident_loggedin']:
+        # Render the resident dashboard template
+        return render_template('resident_homepage.html')
+    else:
+        # Redirect to the resident login page if the resident isn't logged in
+        return redirect(url_for('resident_login'))
+
+
 @app.route('/logout', methods=['POST'])
 def logout():
     return redirect(url_for('login'))
