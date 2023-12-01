@@ -58,6 +58,7 @@ def visitors():
 
     return render_template('visitors.html', visitors=filtered_visitors, checked_in_visitors=checked_in_visitors, type=visitor_type, checked_in_count=checked_in_count, checked_out_count=checked_out_count)
 
+
 @app.route('/registration-success')
 def registration_success():
     return render_template('registration_success.html')
@@ -88,6 +89,7 @@ def register():
         return redirect(url_for('registration_success'))
 
     return render_template('index.html')
+
 
 @app.route('/visitor-dashboard', methods=['GET', 'POST'])
 def visitor_dashboard():
