@@ -224,6 +224,26 @@ def resident_homepage():
         # Redirect to the resident login page if the resident isn't logged in
         return redirect(url_for('resident_login'))
 
+@app.route('/resident_profile/<int:room_number>/<resident_last_name>')
+def resident_profile(room_number, resident_last_name):
+    room_number_str = str(room_number)
+    resident = Resident.query.filter_by(room_number=room_number_str, last_name=resident_last_name).first_or_404()
+    visitors = Visitor.query.filter_by(resident_room_number=room_number_str, resident_last_name=resident_last_name).all()
+
+    for visitor in visitors:
+        if visitor.checkin_time:
+            adjusted_checkin_time = visitor.checkin_time - timedelta(hours=5)
+            visitor.local_checkin_time = adjusted_checkin_time.strftime('%I:%M %p')
+        else:
+            visitor.local_checkin_time = 'N/A'
+        if visitor.checkout_time:
+            adjusted_checkout_time = visitor.checkout_time - timedelta(hours=5)
+            visitor.local_checkout_time = adjusted_checkout_time.strftime('%I:%M %p')
+        else:
+            visitor.local_checkout_time = 'N/A'
+
+    return render_template('resident_profile.html', resident=resident, visitors=visitors)
+
 
 @app.route('/logout', methods=['POST'])
 def logout():
