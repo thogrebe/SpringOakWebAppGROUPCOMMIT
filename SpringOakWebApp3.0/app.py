@@ -31,7 +31,8 @@ def login():
         if username == STAFF_USERNAME and password == STAFF_PASSWORD:
             return redirect(url_for('dashboard'))
         else:
-            return "Invalid username or password. Please try again."
+            incorrect_login = True
+            return render_template('login.html', incorrect_login=incorrect_login)
     return render_template('login.html')
 
 
