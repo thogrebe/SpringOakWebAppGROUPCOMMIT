@@ -130,7 +130,32 @@ def visitor_dashboard():
             return "Visitor not found or not checked in."
 
     return render_template('visitor_dashboard.html')
+    
+@app.route('/visitor_profile/<visitor_email>')
+def visitor_profile(visitor_email):
+    visitor = Visitor.query.filter_by(email=visitor_email).first()
 
+    if visitor:
+        # Apply manual adjustment for check-in time using timedelta
+        if visitor.checkin_time:
+            adjusted_checkin_time = visitor.checkin_time - timedelta(hours=5)
+            visitor.local_checkin_time = adjusted_checkin_time.strftime('%I:%M %p')
+        else:
+            visitor.local_checkin_time = 'N/A'
+
+        # Apply manual adjustment for check-out time using timedelta
+        if visitor.checkout_time:
+            adjusted_checkout_time = visitor.checkout_time - timedelta(hours=5)
+            visitor.local_checkout_time = adjusted_checkout_time.strftime('%I:%M %p')
+        else:
+            visitor.local_checkout_time = 'N/A'
+
+        # Render the visitor profile template with the visitor
+        return render_template('visitor_profile.html', visitor=visitor)
+
+    else:
+        # Handle visitor not found
+        return "Visitor not found", 404
 
 # Resident dashboard login
 @app.route('/resident-login', methods=['GET', 'POST'])
