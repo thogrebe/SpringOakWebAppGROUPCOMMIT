@@ -5,20 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visitor Database</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Include Bootstrap CSS for consistent styling -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
+    <style>
+        /* Custom styles */
+        .navbar, .navbar-expand-lg {
+            width: 100%;
+            margin-right: 0;
+            margin-left: 0;
+        }
+        .full-width-header {
+            margin-top: -1rem; /* Adjust if necessary to align with the navigation bar */
+            margin-bottom: 0; /* Remove any bottom margin */
+        }
+        .container-fluid {
+            padding-left: 0;
+            padding-right: 0;
+            margin: 0 auto; /* Center the container */
+        }
+        .table-responsive {
+            margin-top: 0; /* Align table with the header */
+        }
+        .navbar .me-auto + .navbar-nav {
+            margin-left: 150px; /* Space between navigation buttons */
+        }
+        .header-container {
+            background-color: #208454; /* Same green color as 'bg-success' */
+        }
+        .header-title {
+            color: white; /* White text color */
+            padding: 0.5rem 0; /* Padding for the title */
+        }
+        .space-right-150 {
+        margin-right: 175px; /* Adds space to the right */
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a href="/dashboard" class="navbar-brand btn btn-dark btn-lg me-2">Home</a>
-            <a href="/visitors?type=registered" class="navbar-brand btn btn-dark btn-lg me-2">Visitor Database</a>
-            <a href="{{ url_for('visitor_check_status', type='checked_in') }}" class="btn btn-success">Visitors Checked In</a>
-            <a href="{{ url_for('visitor_check_status', type='checked_out', save_data='true') }}" class="btn btn-warning">Visitors Checked Out</a>                
-        </div>
+    <!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <!-- Home button -->
+        <a href="/dashboard" class="navbar-brand btn btn-dark btn-lg me-2">Home</a>
+        <a href="/visitors?type=registered" class="navbar-brand btn btn-dark btn-lg me-auto">Visitor Database</a>
+        <!-- Link to see visitors checked in -->
+        <a href="{{ url_for('visitor_check_status', type='checked_in') }}" class="btn btn-success me-2 space-right-150">Visitors Checked In</a>
+        <!-- Link to see visitors checked out and possibly save data -->
+        <a href="{{ url_for('visitor_check_status', type='checked_out', save_data='true') }}" class="btn btn-warning">Visitors Checked Out</a>                
+    </div>
     </nav>
 
-    <div class="container mt-5">
-        <h1 class="text-center bg-success text-white p-2">Visitors Status</h1>
+    <!-- Header Container -->
+    <div class="container-fluid header-container">
+        <h1 class="text-center header-title">Visitors Status</h1>
+    </div>
+
+    <div class="container-fluid">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 <div class="alert alert-dismissible alert-{{ messages[0][1] }}">
@@ -28,6 +70,7 @@
             {% endif %}
         {% endwith %}
 
+        <!-- Conditional display of 'Save Visitor Data' button -->
         {% if request.args.get('save_data') == 'true' %}
             <form action="{{ url_for('save_visitor_data') }}" method="post">
                 <button class="btn btn-info" type="submit">Save Visitor Data</button>
@@ -42,7 +85,7 @@
                         <th>Last Name</th>
                         <th>Resident Last Name</th>
                         <th>Resident Room Number</th>
-                        <th style="min-width: 120px; white-space: nowrap;">Date</th>
+                        <th>Date</th>
                         <th>Phone</th>
                         <th>Email</th>
                         <th>Check-In Time</th>
@@ -56,7 +99,7 @@
                         <td>{{ visitor.last_name }}</td>
                         <td>{{ visitor.resident_last_name }}</td>
                         <td>{{ visitor.resident_room_number }}</td>
-                        <td style="min-width: 120px; white-space: nowrap;">{{ visitor.date.strftime('%m-%d-%Y') if visitor.date else 'N/A' }}</td>
+                        <td>{{ visitor.date.strftime('%m-%d-%Y') if visitor.date else 'N/A' }}</td>
                         <td>{{ visitor.phone }}</td>
                         <td>{{ visitor.email }}</td>
                         <td>{{ visitor.local_checkin_time }}</td>
@@ -68,7 +111,7 @@
         </div>
     </div>
 
+    <!-- Include Bootstrap Bundle with Popper -->
     <script src="{{ url_for('static', filename='bootstrap.bundle.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
