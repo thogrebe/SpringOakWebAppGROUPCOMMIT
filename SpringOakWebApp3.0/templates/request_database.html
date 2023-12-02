@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
+    <style>
+        /* Custom styles from HTML 2 */
+        .full-width-navbar {
+            width: 100%;
+            margin-left: calc(-50vw + 50%);
+            margin-right: calc(-50vw + 50%);
+        }
+        .full-width-header {
+            width: 100%;
+            margin-left: calc(-50vw + 50%);
+            margin-right: calc(-50vw + 50%);
+            padding-bottom: 0; /* Reducing padding-bottom to 0 */
+        }
+        .home-btn,
+        .search-btn {
+            background-color: #007bff; /* Blue background for Home and Search buttons */
+            color: white; /* White text */
+            border-color: #007bff; /* Blue border */
+            margin-right: 1rem; /* Space between buttons */
+        }
+        .view-requests-btn,
+        .visitor-status-btn {
+            background-color: #007bff; /* Blue background for View Requests and Resident Login buttons */
+            color: white; /* White text */
+            border-color: #007bff; /* Blue border */
+            margin-left: 1rem; /* Space between buttons */
+        }
+        .search-form .form-control {
+            width: calc(100% - 0.5rem); /* Adjusted width for search input */
+            margin-bottom: 0.5rem; /* Space between input and button */
+        }
+        .search-form .btn {
+            width: 100%; /* Full width for search button */
+            margin-top: 0.25rem; /* Adjusted margin-top */
+        }
+        .rounded-corners {
+            border-radius: 0.25rem;
+        }
+        .search-form {
+            margin-left: auto; /* Move the search form to the right */
+            max-width: 400px; /* Set a maximum width for the search form */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .container {
+            padding-top: 0; /* Reducing padding-top of the container */
+        }
+        .table-responsive {
+            margin-top: -10px; /* Adjusting top margin to reduce the space */
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark full-width-navbar">
+        <div class="container-fluid">
+            <a href="/dashboard" class="navbar-brand btn btn-dark btn-lg me-2 home-btn">Home</a>
+            <!-- Filter button in the corner opposite the home button -->
+            <button type="button" class="btn btn-primary btn-lg filter-btn" data-bs-toggle="modal" data-bs-target="#filterModal">Filter</button>
+        </div>
+    </nav>
+
+    <!-- Title for the Request Database -->
+    <h1 class="text-center bg-success text-white p-2 full-width-header">Requests</h1>
+
+    <!-- Table to display requests -->
+    <div class="container mt-0">
+        <!-- Existing Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert alert-dismissible alert-{{ messages[0][1] }}">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    {{ messages[0][0] }}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Table for Requests -->
+        <table class="table">
+            <!-- Table headers (if any) -->
+            <tbody>
+                <!-- Loop through each request -->
+                {% for request in requests %}
+                    <tr>
+                        <!-- Table data for each request -->
+                        <td>
+                            <!-- View Request button -->
+                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#viewRequestModal_{{ request.id }}">View Request</button>
+                        </td>
+                    </tr>
+
+                    <!-- View Request Modal for each entry -->
+                    <div class="modal fade" id="viewRequestModal_{{ request.id }}" tabindex="-1" aria-labelledby="viewRequestModalLabel_{{ request.id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="viewRequestModalLabel_{{ request.id }}">View Request</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Content of the view request modal -->
+                                    <p>Request ID: {{ request.id }}</p>
+                                    <p>Submission Date: {% if request.submission_date %}{{ request.submission_date.strftime('%m-%d-%Y') }}{% else %}Not Available{% endif %}</p>
+                                    <p>Request Type: {{ request.__class__.__name__ }}</p>
+                                    <p>Resident First Name: {{ request.resident.first_name }}</p>
+                                    <p>Resident Last Name: {{ request.resident.last_name }}</p>
+                                    <p>Resident ID: {{ request.resident.id }}</p>
+                                    <p>Notes: {{ request.notes }}</p>
+                                    <p>Status: {{ request.status }}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Include Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
