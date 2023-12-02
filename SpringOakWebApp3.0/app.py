@@ -770,7 +770,7 @@ def requests_made():
     travel_requests = TravelRequest.query.filter_by(resident_id=resident_id).all()
     maintenance_requests = MaintenanceRequest.query.filter_by(resident_id=resident_id).all()
 
-    return render_template('requests-made.html', 
+    return render_template('request-made.html', 
                            travel_requests=travel_requests,
                            maintenance_requests=maintenance_requests)
 
