@@ -808,7 +808,6 @@ def edit_maintenance_request(request_id):
     request_details = MaintenanceRequest.query.get_or_404(request_id)
     if request.method == 'POST':
         # Process form data and update attributes
-        # ...
         db.session.commit()
         flash('Maintenance request updated successfully!', 'success')
         return redirect(url_for('request_database'))
