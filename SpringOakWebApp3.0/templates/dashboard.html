@@ -3,31 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staff Dashboard</title>
+    <title>Admin Dashboard</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #702c4c; /* Maroon background */
+        }
+        
+        .custom-btn {
+            background-color: #208454; /* Match the banner color */
+            border: none; /* Remove border */
+            color: white; /* White text */
+        }
+        
+        .custom-btn:hover {
+            background-color: #28a765; /* Slightly darker green on hover */
+        }
+        
+        .btn-logout {
+            background-color: #dc3545; /* Bootstrap 'danger' color for logout */
+            border: none;
+            color: white; /* White text */
+        }
+        
+        .btn-logout:hover {
+            background-color: #c82333; /* Slightly darker red on hover */
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="mb-4">Admin Dashboard</h1>
-        <div class="d-flex flex-wrap">
-            <a href="/visitors?type=registered" class="m-2">
-                <button class="btn btn-primary">
-                    Visitors <span class="badge bg-secondary">{{ registered_count }}</span>
-                </button>
-            </a>
-            <a href="/resident-database" class="m-2">
-                <button class="btn btn-primary">Residents</button>
-            </a>
-            <a href="/request-database" class="m-2">
-                <button class="btn btn-primary">Resident Requests</button>
-            </a>
-            <form action="/logout" method="post" class="m-2">
-                <button type="submit" class="btn btn-danger">Logout</button>
-            </form>
-        </div>
+    <h1 class="p-2 bg-success text-white">Admin Dashboard</h1>
+    <div class="d-grid gap-2 col-2 mx-auto">
+        <a href="/visitors?type=registered" class="m-2">
+            <button class="btn custom-btn btn-lg col-12">Visitors</button>
+        </a>
+        <a href="/resident-database" class="m-2">
+            <button class="btn custom-btn btn-lg col-12">Residents</button>
+        </a>
+        <form action="/logout" method="post" class="m-2">
+            <button type="submit" class="col-12 btn btn-logout btn-lg">Logout</button>
+        </form>
     </div>
     <script src="{{ url_for('static', filename='bootstrap.bundle.min.js') }}"></script>
 </body>
 </html>
-
 
