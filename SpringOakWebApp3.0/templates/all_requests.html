@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resident Database</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
+    <style>
+        /* Custom styles from HTML 2 */
+        .full-width-navbar {
+            width: 100%;
+            margin-left: calc(-50vw + 50%);
+            margin-right: calc(-50vw + 50%);
+        }
+        .full-width-header {
+            width: 100%;
+            margin-left: calc(-50vw + 50%);
+            margin-right: calc(-50vw + 50%);
+            padding-bottom: 0; /* Reducing padding-bottom to 0 */
+        }
+        .home-btn,
+        .search-btn {
+            background-color: #007bff; /* Blue background for Home and Search buttons */
+            color: white; /* White text */
+            border-color: #007bff; /* Blue border */
+            margin-right: 1rem; /* Space between buttons */
+        }
+        .view-requests-btn,
+        .visitor-status-btn {
+            background-color: #007bff; /* Blue background for View Requests and Resident Login buttons */
+            color: white; /* White text */
+            border-color: #007bff; /* Blue border */
+            margin-left: 1rem; /* Space between buttons */
+        }
+        .search-form .form-control {
+            width: calc(100% - 0.5rem); /* Adjusted width for search input */
+            margin-bottom: 0.5rem; /* Space between input and button */
+        }
+        .search-form .btn {
+            width: 100%; /* Full width for search button */
+            margin-top: 0.25rem; /* Adjusted margin-top */
+        }
+        .rounded-corners {
+            border-radius: 0.25rem;
+        }
+        .search-form {
+            margin-left: auto; /* Move the search form to the right */
+            max-width: 400px; /* Set a maximum width for the search form */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .container {
+            padding-top: 0; /* Reducing padding-top of the container */
+        }
+        .table-responsive {
+            margin-top: -10px; /* Adjusting top margin to reduce the space */
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark full-width-navbar">
+        <div class="container-fluid">
+            <a href="/dashboard" class="navbar-brand btn btn-dark btn-lg me-2 home-btn">Home</a>
+            
+            <!-- Filter button in the corner opposite the home button -->
+            <button type="button" class="btn btn-primary btn-lg filter-btn" data-bs-toggle="modal" data-bs-target="#filterModal">Filter</button>
+        </div>
+    </nav>
+
+      <!-- Title for the Request Database -->
+      <h1 class="text-center bg-success text-white p-2 full-width-header">Requests</h1>
+      <!-- Filter Modal -->
+        <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="filterModalLabel">Filter Requests</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Dropdown for filtering requests -->
+                        <select class="form-select rounded-corners" name="request_type" id="filterRequestType">
+                            <option value="" selected>All</option>
+                            <option value="maintenance">Maintenance</option>
+                            <option value="travel">Travel</option>
+                            <option value="doctor">Doctor</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="applyFilterBtn">Apply Filter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+      <!-- Label for Travel Request -->
+      <h2 class="text-center mt-4">Travel Request</h2>
+  
+       <!-- Table -->
+       <div class="container custom-table-container">
+          <div class="table-responsive">
+              <table class="table table-striped table-hover">
+                  <thead class="table-success">
+                      <tr>
+                          <th>ID</th>
+                          <th>Resident ID</th>
+                          <th>Submission Date</th>
+                          <th>Departure Date</th>
+                          <th>Return Date</th>
+                          <th>Destination</th>
+                          <th>Purpose</th>
+                          <th>Emergency Contact</th>
+                          <th>Status</th>
+                          <th>Action</th> <!-- New column for actions -->
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for request in travel_requests %}
+                      <tr>
+                          <td>{{ request.id }}</td>
+                          <td>{{ request.resident_id }}</td>
+                          <td>{{ request.submission_date.strftime('%I:%M %p %m/%d/%Y') }}</td>
+                          <td>{{ request.departure_date.strftime('%m/%d/%Y') }}</td>
+                          <td>{{ request.return_date.strftime('%m/%d/%Y') }}</td>
+                          <td>{{ request.destination }}</td>
+                          <td>{{ request.purpose }}</td>
+                          <td>{{ request.emergency_contact }}</td>
+                          <td>{{ request.status }}</td>
+                          <td>
+                            <!-- Button to view/edit the request -->
+                            <button type="button" class="btn btn-primary btn-sm" onclick="location.href='/edit-request/{{ request.id }}'">
+                                View/Edit
+                            </button>
+                        </td>
+                    </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+          </div>
+      </div>
+      <!-- Label for Maintenance Request -->
+      <h2 class="text-center mt-4">Maintenance Request</h2>
+      <!-- Table -->
+        <div class="container custom-table-container">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-success">
+                        <tr>
+                            <th>ID</th>
+                            <th>Resident ID</th>
+                            <th>Submission Date</th>
+                            <th>Room Number</th>
+                            <th>Work Type</th>
+                            <th>Date Completed</th>
+                            <th>Contact Number</th>
+                            <th>Entry Permission</th>
+                            <th>Notes</th>
+                            <th>Status</th>
+                            <th>Action</th> <!-- New column for actions -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for request in maintenance_requests %}
+                        <tr>
+                            <td>{{ request.id }}</td>
+                            <td>{{ request.resident_id }}</td>
+                            <td>{{ request.submission_date.strftime('%I:%M %p %m/%d/%Y') }}</td>
+                            <td>{{ request.room_number }}</td>
+                            <td>{{ request.work_type }}</td>
+                            <td>{{ request.date_completed.strftime('%m/%d/%Y') if request.date_completed else 'N/A' }}</td>
+                            <td>{{ request.contact_number }}</td>
+                            <td>{{ 'Yes' if request.entry_permission else 'No' }}</td>
+                            <td>{{ request.notes }}</td>
+                            <td>{{ request.status }}</td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="location.href='/edit-maintenance-request/{{ request.id }}'">
+                                    View/Edit
+                                </button>                                
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+  
+      
+        <!-- Bootstrap Bundle with Popper.js -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script type="text/javascript">
+            function applyFilter() {
+                var requestType = document.getElementById('filterRequestType').value;
+                window.location.href = `/filter-requests/${requestType}`;
+            }
+            // Attach the event listener to the button
+            document.getElementById('applyFilterBtn').addEventListener('click', applyFilter);
+            </script>
+            
+  </body>
+  </html>
