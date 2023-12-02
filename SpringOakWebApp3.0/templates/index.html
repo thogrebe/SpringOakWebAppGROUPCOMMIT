@@ -1,82 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
     <script src="{{ url_for('static', filename='bootstrap.bundle.min.js') }}"></script>
     <title>Visitor Registration</title>
-    
-</head>
-<body>
+  </head>
+  <body>
     <div id="banner">
-        <img src="{{ url_for('static', filename='banner2.png') }}" alt="Spring Oak Visitor Registration">
+      <img
+        src="{{ url_for('static', filename='banner.png') }}"
+        alt="Spring Oak Visitor Registration"
+      />
     </div>
     <!-- Container for registration card -->
     <div class="container mt-5">
-    
-        <div class="registration-card">
-            <!-- Title is centered by the CSS above -->
-            <h2>Visitor Registration</h2>
-            {% if message %}
-                <p class="alert alert-info">{{ message }}</p>
-            {% endif %}
-            <form action="/register" method="post" onsubmit="return validateForm()">
-                <!-- Reintroduce the fields -->
-                <div class="mb-3">
-                    <label for="first_name" class="form-label">First Name:</label>
-                    <input type="text" id="first_name" name="first_name" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label for="last_name" class="form-label">Last Name:</label>
-                    <input type="text" id="last_name" name="last_name" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label for="resident_last_name" class="form-label">Resident Last Name:</label>
-                    <input type="text" id="resident_last_name" name="resident_last_name" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label for="resident_room_number" class="form-label">Resident Room Number:</label>
-                    <input type="text" id="resident_room_number" name="resident_room_number" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label for="date" class="form-label">Date:</label>
-                    <input type="date" id="date" name="date" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label for="phonenumber" class="form-label">Phone Number:</label>
-                    <input type="tel" id="phonenumber" name="phonenumber" class="form-control" pattern="[0-9]{10}" required>
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email:</label>
-                    <input type="email" id="email" name="email" class="form-control" required>
-                </div>
-                <button type="submit" class="register-button">Register</button>
-            </form>
-        </div>
+      <div class="registration-card">
+        <!-- Title is centered by the CSS above -->
+        <h2>Visitor Registration</h2>
+        {% if message %}
+        <p class="alert alert-info">{{ message }}</p>
+        {% endif %}
+        <form action="/register" method="post" onsubmit="return validateForm()">
+          <!-- Reintroduce the fields -->
+          <div class="mb-3">
+            <label for="first_name" class="form-label">First Name:</label>
+            <input
+              type="text"
+              id="first_name"
+              name="first_name"
+              class="form-control"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="last_name" class="form-label">Last Name:</label>
+            <input
+              type="text"
+              id="last_name"
+              name="last_name"
+              class="form-control"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="resident_last_name" class="form-label"
+              >Resident Last Name:</label
+            >
+            <input
+              type="text"
+              id="resident_last_name"
+              name="resident_last_name"
+              class="form-control"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="resident_room_number" class="form-label"
+              >Resident Room Number:</label
+            >
+            <input
+              type="text"
+              id="resident_room_number"
+              name="resident_room_number"
+              class="form-control"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="date" class="form-label">Date:</label>
+            <input
+              type="date"
+              id="date"
+              name="date"
+              class="form-control"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="phonenumber" class="form-label">Phone Number:</label>
+            <input
+              type="tel"
+              id="phonenumber"
+              name="phonenumber"
+              class="form-control"
+              pattern="[0-9]{10}"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email:</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-control"
+              required
+            />
+          </div>
+          <button type="submit" class="register-button">Register</button>
+        </form>
+        <hr class="my-4" />
+        <a
+          href="{{url_for('visitor_dashboard')}}"
+          type="submit"
+          class="btn btn-primary btn-lg btn-block btn-danger"
+          >Go Back</a
+        >
+      </div>
     </div>
-    
+
     <script src="{{ url_for('static', filename='bootstrap.bundle.min.js') }}"></script>
     <script>
-        function validateForm() {
-            console.log("Button clicked");
-            var phoneNumber = document.getElementById("phonenumber").value.replace(/-/g, ''); // Remove dashes
-            var email = document.getElementById("email").value;
-            var phoneNumberPattern = /^[0-9]{10}$/;
-            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+/;
-    
-            if (!phoneNumber.match(phoneNumberPattern)) {
-                alert("Phone number must be ten digits and NO dashes.");
-                return false;
-            }
-    
-            if (!email.match(emailPattern)) {
-                alert("Please enter a valid email address.");
-                return false;
-            }
-    
-            return true;
+      function validateForm() {
+        console.log("Button clicked");
+        var phoneNumber = document
+          .getElementById("phonenumber")
+          .value.replace(/-/g, ""); // Remove dashes
+        var email = document.getElementById("email").value;
+        var phoneNumberPattern = /^[0-9]{10}$/;
+        var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+/;
+
+        if (!phoneNumber.match(phoneNumberPattern)) {
+          alert("Phone number must be ten digits and NO dashes.");
+          return false;
         }
+
+        if (!email.match(emailPattern)) {
+          alert("Please enter a valid email address.");
+          return false;
+        }
+
+        return true;
+      }
     </script>
-</body>
+  </body>
 </html>
