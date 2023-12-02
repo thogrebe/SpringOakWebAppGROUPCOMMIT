@@ -1,84 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Staff Login</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css"
-    />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-      crossorigin="anonymous"
-    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
     <style>
-      #banner {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        width: 18%;
-      }
+        body {
+            background-color: #702c4c; /* Maroon background */
+        }
+
+        .form-panel {
+            background-color: #fff; /* White background for the form */
+            padding: 2rem; /* Padding inside the white box */
+            margin-top: 30px; /* Move the form down by 30px */
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+            width: auto; /* Auto width based on content */
+            max-width: 350px; /* Maximum width of the form */
+            margin-left: auto; /* Center the form panel */
+            margin-right: auto;
+        }
+
+        .form-group {
+            display: flex; /* Use flex to align label and input */
+            align-items: center; /* Align items vertically */
+            width: 100%; /* Full width of form panel */
+            margin-bottom: 1rem; /* Margin bottom for spacing */
+        }
+
+        .form-label {
+            font-size: 1.1rem; /* Slightly larger font size for labels */
+            margin-right: 0.5rem; /* Space between label and input */
+            white-space: nowrap; /* Prevents wrapping of text in label */
+        }
+
+        .form-control {
+            flex-grow: 1; /* Allow input to fill the space */
+            font-size: 1.1rem; /* Slightly larger font size for inputs */
+        }
+
+        .btn-login {
+            width: 100%; /* Button width to match inputs */
+            padding: 0.5rem 1rem; /* Padding inside the button */
+            font-size: 1.1rem; /* Slightly larger font size for the button */
+            margin-top: 1rem; /* Space above the button */
+        }
+
+        .green-banner {
+            background-color: #208454; /* Bootstrap 'success' green */
+            color: white;
+            padding: 0.5rem 1rem;
+            font-size: 1.5rem; /* Larger font size for the banner */
+            text-align: left; /* Align the text to the left */
+        }
+
     </style>
-  </head>
-  <section class="vh-100" style="background-color: #702c4c">
-    <img id="banner" src="{{ url_for('static', filename='banner.png') }}" />
-    <body>
-      <div class="container py-5 h-73">
-        <div class="row d-flex justify-content-center align-items-center h-100">
-          <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-            <div class="card shadow-2-strong" style="border-radius: 1rem">
-              <div class="card-body p-5 text-center">
-                <h1 class="mb-3">Staff Login</h1>
-                <div class="container">
-                  <form action="/" method="post" class="mt-4">
-                    <div class="form-outline mb-4">
-                      <label for="username" class="form-label fs-5"
-                        >Username:</label
-                      >
-                      <input
-                        type="text"
-                        id="username"
-                        name="username"
-                        class="form-control"
-                        required
-                      />
-                    </div>
-                    <div class="form-outline mb-4">
-                      <label for="password" class="form-label fs-5"
-                        >Password:</label
-                      >
-                      <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        class="form-control"
-                        required
-                      />
-                    </div>
-                    <div class="form-outline mb-4 d-grid gap-2 col-6 mx-auto">
-                      <button
-                        type="submit"
-                        class="btn btn-primary btn-lg btn text-nowrap"
-                      >
-                        Login
-                      </button>
-                    </div>
-                  </form>
-                  {% if incorrect_login %}
-                  <div class="alert alert-danger" role="alert">
-                    Incorrect Login. Please Try Again
-                  </div>
-                  {% endif %}
+</head>
+<body>
+    <div class="green-banner">
+        Staff Login
+    </div>
+    <div class="text-center" style="margin-top: 30px;">
+        <img src="{{ url_for('static', filename='banner2.png') }}" alt="Spring Oak" style="max-width: 100%; height: auto;">
+    </div>
+    <div class="container">
+        <div class="form-panel">
+            <form action="/" method="post">
+                <div class="form-group">
+                    <label for="username" class="form-label">Username:</label>
+                    <input type="text" id="username" name="username" class="form-control" required>
                 </div>
-                <script src="{{ url_for('static', filename='bootstrap.bundle.min.js') }}"></script>
-              </div>
-            </div>
-          </div>
+                <div class="form-group">
+                    <label for="password" class="form-label">Password:</label>
+                    <input type="password" id="password" name="password" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-success btn-lg btn-login">Login</button>
+            </form>
         </div>
-      </div>
-    </body>
-  </section>
+    </div>
+    <script src="{{ url_for('static', filename='bootstrap.bundle.min.js') }}"></script>
+</body>
 </html>
+
