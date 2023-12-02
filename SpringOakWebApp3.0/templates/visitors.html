@@ -3,68 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visitor Database</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Include Bootstrap CSS for consistent styling -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
+    <style>
+        /* Custom styles */
+        .full-width-navbar {
+            width: 100%;
+            margin-left: calc(-50vw + 50%);
+            margin-right: calc(-50vw + 50%);
+        }
+        .full-width-header {
+            width: 100%;
+            margin-left: calc(-50vw + 50%);
+            margin-right: calc(-50vw + 50%);
+            padding-bottom: 0; /* Reducing padding-bottom to 0 */
+        }
+        .visitor-status-btn {
+            background-color: #208454; /* Green background */
+            color: white; /* White text */
+            border-color: #208454; /* Green border */
+            margin-right: 150px; /* Space between Visitor Status and Visitor Dashboard buttons */
+        }
+        .visitor-status-btn:hover {
+            background-color: #1b6a3f; /* Darker green on hover */
+            border-color: #1b6a3f; /* Darker green border on hover */
+        }
+        .search-form .form-control,
+        .search-form .btn {
+            width: 100%; /* Full width for input and button */
+            margin-bottom: 0.5rem; /* Space between input and button */
+        }
+        .rounded-corners {
+            border-radius: 0.25rem;
+        }
+        .search-form {
+            margin-left: 0; /* Adjust this as necessary */
+        }
+        .container {
+            padding-top: 0; /* Reducing padding-top of the container */
+        }
+        .table-responsive {
+            margin-top: -10px; /* Adjusting top margin to reduce the space */
+        }
+    </style>
+    
 </head>
 <body>
-    <div class="mb-3">
-        <a href="/dashboard" class="btn btn-primary me-2">Home</a>
-        <a href="/visitor-dashboard" class="btn btn-primary">Visitor Dashboard</a>
-        <a href="/visitors?type=checked_in" class="btn btn-primary me-2">Checked In Visitors</a>
-        <a href="/visitors?type=checked_out" class="btn btn-secondary">Checked Out Visitors</a>
-    </div>
-    <div class="container mt-5">
-        <h1 class="mb-4">Registered Visitors</h1>
-   
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Resident Name</th>
-                        <th>Date</th>
-                        <th>Phone</th>
-                        <th>Email</th>
-                        <th>Check-In Time</th>
-                        <th>Check-Out Time</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for visitor in visitors %}
-                    <tr>
-                        <td>{{ visitor.name }}</td>
-                        <td>{{ visitor.resident_name }}</td>
-                        <td>
-                            {% if visitor.date %}
-                                {{ visitor.date }}
-                            {% else %}
-                                N/A
-                            {% endif %}
-                        </td>
-                        <td>{{ visitor.phone }}</td>
-                        <td>{{ visitor.email }}</td>
-                        <td>
-                            {% if visitor.checkin_time %}
-                                {{ visitor.checkin_time.strftime('%I:%M %p') }}
-                            {% else %}
-                                N/A
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if visitor.checkout_time %}
-                                {{ visitor.checkout_time.strftime('%I:%M %p') }}
-                            {% else %}
-                                N/A
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+   <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark full-width-navbar">
+        <div class="container-fluid">
+            <a href="/dashboard" class="navbar-brand btn btn-dark btn-lg me-2">Home</a>
+            <!-- Use 'flex-column' to stack elements vertically -->
+            <form action="/search-visitors" method="get" class="d-flex flex-column search-form align-items-center">
+                <input type="search" class="form-control rounded-corners mb-2" placeholder="Search by name or phone" aria-label="Search" name="query">
+                <button type="submit" class="btn btn-outline-success rounded-corners">Search</button>
+            </form>
+            <a href="/visitor_check_status" class="btn visitor-status-btn btn-lg margin-right-2px">Visitor Status</a>
+            <a href="/visitor-dashboard" class="btn btn-primary btn-lg">Visitor Dashboard</a>
         </div>
+    </nav>
+    <h1 class="text-center bg-success text-white p-2 full-width-header">Visitors</h1>
+
+<!-- Reduced the top margin to zero for the container -->
+<div class="container mt-0">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="alert alert-dismissible alert-{{ messages[0][1] }}">
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                {{ messages[0][0] }}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Applied a negative margin to pull the table up closer to the title -->
+    <div class="table-responsive" style="margin-top: -10px;">
+        <table class="table table-striped">
+            <thead class="table-success">
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Resident Last Name</th>
+                    <th>Resident Room Number</th>
+                    <th>Date</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for visitor in visitors %}
+                <tr>
+                    <td>{{ visitor.first_name }}</td>
+                    <td>{{ visitor.last_name }}</td>
+                    <td>{{ visitor.resident_last_name }}</td>
+                    <td>{{ visitor.resident_room_number }}</td>
+                    <td>{{ visitor.date.strftime('%m-%d-%Y') if visitor.date else 'N/A' }}</td>
+                    <td>{{ visitor.phone }}</td>
+                    <td>{{ visitor.email }}</td>
+                    <td><a href="{{ url_for('visitor_profile', visitor_email=visitor.email) }}" class="btn btn-primary btn-sm">View Profile</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
+</div>
+
+    
     <script src="{{ url_for('static', filename='bootstrap.bundle.min.js') }}"></script>
-</body>
-</html>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+    </html>
 
 
 
